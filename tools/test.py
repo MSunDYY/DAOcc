@@ -25,8 +25,8 @@ from mmdet3d.utils import recursive_eval
 
 def parse_args():
     parser = argparse.ArgumentParser(description="MMDet test (and eval) a model")
-    parser.add_argument("config", help="test config file path")
-    parser.add_argument("checkpoint", help="checkpoint file")
+    parser.add_argument("--config",default='configs/nuscenes/occ3d/daocc_occ3d_wo_mask.yaml', help="test config file path")
+    parser.add_argument("--checkpoint", default='ckpts/epoch_6_wo.pth',help="checkpoint file")
     parser.add_argument("--dist", action='store_true', help="distributed or not")
     parser.add_argument("--out", help="output result file in pickle format")
     parser.add_argument(

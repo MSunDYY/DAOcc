@@ -571,15 +571,22 @@ class LoadOccGTFromFile:
         if self.data_type == 'occ3d':
             occ_gt_path = results['occ3d']['occ_gt_path']
             occ_gt_path = os.path.join(occ_gt_path, "labels.npz")
-
-            occ_labels = np.load(occ_gt_path)
-            semantics = occ_labels['semantics']
-            mask_lidar = occ_labels['mask_lidar']
-            mask_camera = occ_labels['mask_camera']
-
-            results['voxel_semantics'] = semantics  # (200, 200, 16)
-            results['mask_lidar'] = mask_lidar  # (200, 200, 16)
-            results['mask_camera'] = mask_camera  # (200, 200, 16)
+            try:
+                occ_labels = np.load(occ_gt_path)
+                semantics = occ_labels['semantics']
+                mask_lidar = occ_labels['mask_lidar']
+                mask_camera = occ_labels['mask_camera']
+                results['voxel_semantics'] = semantics  # (200, 200, 16)
+                results['mask_lidar'] = mask_lidar  # (200, 200, 16)
+                results['mask_camera'] = mask_camera  # (200, 200, 16)
+            except:
+                occ_labels = np.load(occ_gt_path)
+                semantics = occ_labels['semantics']
+                mask_lidar = occ_labels['mask_lidar']
+                mask_camera = occ_labels['mask_camera']
+                results['voxel_semantics'] = semantics  # (200, 200, 16)
+                results['mask_lidar'] = mask_lidar  # (200, 200, 16)
+                results['mask_camera'] = mask_camera  # (200, 200, 16)
         else:  # self.data_type == 'surround_occ':
             occ = np.load(results['surround_occ']['occ_gt_path'])
             occ = occ.astype(np.float32)
