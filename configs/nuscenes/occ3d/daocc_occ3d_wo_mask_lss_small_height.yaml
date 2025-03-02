@@ -1,11 +1,49 @@
 voxel_size: [0.075, 0.075, 0.2]
 point_cloud_range: [-54.0, -54.0, -5.0, 54.0, 54.0, 3.0]
 
+data:
+  samples_per_gpu: 1
+  workers_per_gpu: 8
+  train:
+    type: CBGSDataset
+    dataset:
+      type: ${dataset_type}
+      dataset_root: ${dataset_root}
+      ann_file: ${dataset_root + "nuscenes_infos_train_w_2occ.pkl"}
+      pipeline: ${train_pipeline}
+      object_classes: ${object_classes}
+      modality: ${input_modality}
+      test_mode: false
+      use_valid_flag: true
+      box_type_3d: LiDAR
+      data_type: ${occ_data_type}
+  val:
+    type: ${dataset_type}
+    dataset_root: ${dataset_root}
+    ann_file: ${dataset_root + "nuscenes_infos_val_w_2occ.pkl"}
+    pipeline: ${test_pipeline}
+    object_classes: ${object_classes}
+    modality: ${input_modality}
+    test_mode: true
+    box_type_3d: LiDAR
+    data_type: ${occ_data_type}
+  test:
+    type: ${dataset_type}
+    dataset_root: ${dataset_root}
+    ann_file: ${dataset_root + "nuscenes_infos_val_w_2occ.pkl"}
+    pipeline: ${test_pipeline}
+    object_classes: ${object_classes}
+    modality: ${input_modality}
+    test_mode: true
+    box_type_3d: LiDAR
+    data_type: ${occ_data_type}
+
+
 augment3d:
   scale: [1., 1.]
   rotate: [-0., 0.]
   translate: 0.
-
+resume_from: null
 model:
   type: BEVFusion
   encoders:
@@ -60,20 +98,20 @@ model:
           mode: bilinear
           align_corners: false
       vtransform:
-        type: BEVTransform
-        top_type: lidar
-        x: [-54.0, 54.0]
-        y: [-54.0, 54.0]
-        z: [-5.0, 3.0]
-        xs: 180
-        ys: 180
-        zs: 10
-        input_size: [256, 704]
+        type: LSSTransform
         in_channels: 256
         out_channels: 128
+        image_size : [256,704]
+        feature_size: [32,88]
+        xbound: [ -54., 54., 0.6 ]
+        ybound: [ -54., 54., 0.6 ]
+        zbound: [ -5., 3., 8.0 ]
+        dbound: [ 1.0, 55.0, 1.0 ]
+
+
   fuser:
     type: ConvFuser
-    in_channels: [1280, 256]
+    in_channels: [128,256]
     out_channels: 512
   decoder:
     backbone:
@@ -190,14 +228,13 @@ model:
 
 optimizer:
   type: AdamW
-  lr: 2.0e-4
+  lr: 0.25e-4
   weight_decay: 0.01
 
 optimizer_config:
   grad_clip:
     max_norm: 35
     norm_type: 2
-  cumulative_iters: 8
 
 lr_config:
   policy: CosineAnnealing

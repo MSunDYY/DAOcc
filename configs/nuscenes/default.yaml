@@ -214,7 +214,7 @@ test_pipeline:
       - occ_aug_matrix
 
 data:
-  samples_per_gpu: 4
+  samples_per_gpu: 1
   workers_per_gpu: 4
   train:
     type: CBGSDataset

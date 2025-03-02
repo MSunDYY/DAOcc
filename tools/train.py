@@ -21,7 +21,7 @@ def main():
     # dist.init()
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config",default='configs/nuscenes/occ3d/daocc_occ3d_wo_mask_lss.yaml', metavar="FILE", help="config file")
+    parser.add_argument("--config",default='configs/nuscenes/occ3d/daocc_occ3d_wo_mask.yaml', metavar="FILE", help="config file")
     parser.add_argument("--run-dir", metavar="DIR", help="run directory")
     parser.add_argument("--dist", action='store_true', help="distributed or not")
     args, opts = parser.parse_known_args()

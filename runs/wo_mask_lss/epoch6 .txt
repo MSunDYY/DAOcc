@@ -1,0 +1,48 @@
+===> per class IoU of 6019 samples:
+===> others - IoU = 10.7
+===> barrier - IoU = 56.78
+===> bicycle - IoU = 34.06
+===> bus - IoU = 54.32
+===> car - IoU = 59.81
+===> construction_vehicle - IoU = 30.45
+===> motorcycle - IoU = 41.19
+===> pedestrian - IoU = 48.66
+===> traffic_cone - IoU = 40.12
+===> trailer - IoU = 46.16
+===> truck - IoU = 47.94
+===> driveable_surface - IoU = 66.7
+===> other_flat - IoU = 36.34
+===> sidewalk - IoU = 45.79
+===> terrain - IoU = 45.51
+===> manmade - IoU = 64.27
+===> vegetation - IoU = 60.48
+===> mIoU of 6019 samples: 46.43
+
+occ metric =  Ray-IoU
+
+Starting Evaluation...
+6019it [05:24, 18.55it/s]
++----------------------+----------+----------+----------+
+|     Class Names      | RayIoU@1 | RayIoU@2 | RayIoU@4 |
++----------------------+----------+----------+----------+
+|        others        |  0.081   |  0.085   |  0.086   |
+|       barrier        |  0.469   |  0.492   |  0.504   |
+|       bicycle        |  0.368   |  0.377   |  0.378   |
+|         bus          |  0.666   |  0.737   |  0.773   |
+|         car          |  0.583   |  0.643   |  0.666   |
+| construction_vehicle |  0.245   |  0.286   |  0.300   |
+|      motorcycle      |  0.439   |  0.458   |  0.463   |
+|      pedestrian      |  0.490   |  0.514   |  0.523   |
+|     traffic_cone     |  0.393   |  0.398   |  0.402   |
+|       trailer        |  0.383   |  0.414   |  0.436   |
+|        truck         |  0.535   |  0.596   |  0.624   |
+|  driveable_surface   |  0.575   |  0.663   |  0.754   |
+|      other_flat      |  0.303   |  0.343   |  0.378   |
+|       sidewalk       |  0.304   |  0.366   |  0.422   |
+|       terrain        |  0.305   |  0.385   |  0.457   |
+|       manmade        |  0.587   |  0.631   |  0.670   |
+|      vegetation      |  0.533   |  0.628   |  0.687   |
++----------------------+----------+----------+----------+
+|         MEAN         |  0.427   |  0.472   |  0.501   |
++----------------------+----------+----------+----------+
+{'RayIoU': 0.4666323342957121, 'RayIoU@1': 0.4269695363889951, 'RayIoU@2': 0.4715910241335232, 'RayIoU@4': 0.5013364423646178}
