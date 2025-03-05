@@ -199,6 +199,14 @@ optimizer_config:
     norm_type: 2
   cumulative_iters: 8
 
+log_config:
+  interval: 500
+  hooks:
+    -
+      type: TextLoggerHook
+    -
+      type: TensorboardLoggerHook
+
 lr_config:
   policy: CosineAnnealing
   warmup: linear

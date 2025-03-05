@@ -19,7 +19,7 @@ lib64/
 parts/
 sdist/
 var/
-run/
+runs/
 wheels/
 *.egg-info/
 .installed.cfg
