@@ -54,7 +54,7 @@ class NuScenesDatasetOccupancy(NuScenesDataset):
         dataset_root=None,
         object_classes=None,
         map_classes=None,
-        load_interval=100,
+        load_interval=1,
         with_velocity=True,
         modality=None,
         box_type_3d="LiDAR",
