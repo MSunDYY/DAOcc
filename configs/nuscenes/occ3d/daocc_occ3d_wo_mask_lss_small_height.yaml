@@ -230,13 +230,13 @@ optimizer:
   type: AdamW
   lr: 2.0e-4
   weight_decay: 0.01
-  accumulative_iters: 4
+
 
 optimizer_config:
   grad_clip:
     max_norm: 35
     norm_type: 2
-  cumulative_iters: 8
+  cumulative_iters: 4
 
 lr_config:
   policy: CosineAnnealing
