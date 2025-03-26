@@ -3,15 +3,15 @@ augment2d:
     fixed_prob: true
     prob: 0.0
   resize:
-  - - 0.38
-    - 0.55
-  - - 0.48
-    - 0.48
-  - - -0.06
-    - 0.11
+  - - 0.0
+    - 0.0
+  - - 0.0
+    - 0.0
+  - - 0.0
+    - 0.0
   rotate:
-  - -5.4
-  - 5.4
+  - -0.0
+  - 0.0
 augment3d:
   rotate:
   - -0.0
@@ -34,7 +34,7 @@ data:
   test:
     ann_file: ../data/nuscenes/nuscenes_infos_val_w_2occ.pkl
     box_type_3d: LiDAR
-    data_type: occ3d
+    data_type: surround_occ
     dataset_root: ../data/nuscenes/
     modality:
       use_camera: true
@@ -83,8 +83,8 @@ data:
       is_train: false
       rand_flip: false
       resize_lim:
-      - -0.06
-      - 0.11
+      - 0.0
+      - 0.0
       rot_lim:
       - 0.0
       - 0.0
@@ -98,7 +98,7 @@ data:
       - 0.0
       trans_lim: 0.0
       type: GlobalRotScaleTrans
-    - data_type: occ3d
+    - data_type: surround_occ
       type: LoadOccGTFromFile
     - point_cloud_range:
       - -54.0
@@ -155,7 +155,7 @@ data:
     dataset:
       ann_file: ../data/nuscenes/nuscenes_infos_train_w_2occ.pkl
       box_type_3d: LiDAR
-      data_type: occ3d
+      data_type: surround_occ
       dataset_root: ../data/nuscenes/
       modality:
         use_camera: true
@@ -204,11 +204,11 @@ data:
         is_train: true
         rand_flip: true
         resize_lim:
-        - -0.06
-        - 0.11
+        - 0.0
+        - 0.0
         rot_lim:
-        - -5.4
-        - 5.4
+        - -0.0
+        - 0.0
         type: ImageAug3D
       - is_train: true
         resize_lim:
@@ -219,7 +219,7 @@ data:
         - 0.0
         trans_lim: 0.0
         type: GlobalRotScaleTrans
-      - data_type: occ3d
+      - data_type: surround_occ
         type: LoadOccGTFromFile
       - type: RandomFlip3D
       - point_cloud_range:
@@ -309,7 +309,7 @@ data:
   val:
     ann_file: ../data/nuscenes/nuscenes_infos_val_w_2occ.pkl
     box_type_3d: LiDAR
-    data_type: occ3d
+    data_type: surround_occ
     dataset_root: ../data/nuscenes/
     modality:
       use_camera: true
@@ -358,8 +358,8 @@ data:
       is_train: false
       rand_flip: false
       resize_lim:
-      - -0.06
-      - 0.11
+      - 0.0
+      - 0.0
       rot_lim:
       - 0.0
       - 0.0
@@ -373,7 +373,7 @@ data:
       - 0.0
       trans_lim: 0.0
       type: GlobalRotScaleTrans
-    - data_type: occ3d
+    - data_type: surround_occ
       type: LoadOccGTFromFile
     - point_cloud_range:
       - -54.0
@@ -426,7 +426,7 @@ data:
       type: Collect3D
     test_mode: true
     type: NuScenesDatasetOccupancy
-  workers_per_gpu: 8
+  workers_per_gpu: 4
 dataset_root: ../data/nuscenes/
 dataset_type: NuScenesDatasetOccupancy
 deterministic: false
@@ -462,8 +462,8 @@ evaluation:
     is_train: false
     rand_flip: false
     resize_lim:
-    - -0.06
-    - 0.11
+    - 0.0
+    - 0.0
     rot_lim:
     - 0.0
     - 0.0
@@ -477,7 +477,7 @@ evaluation:
     - 0.0
     trans_lim: 0.0
     type: GlobalRotScaleTrans
-  - data_type: occ3d
+  - data_type: surround_occ
     type: LoadOccGTFromFile
   - point_cloud_range:
     - -54.0
@@ -553,7 +553,7 @@ lr_config:
   min_lr_ratio: 0.001
   policy: CosineAnnealing
   warmup: linear
-  warmup_iters: 2000
+  warmup_iters: 500
   warmup_ratio: 0.33333333
 max_epochs: 6
 max_keep_ckpt: 1
@@ -607,31 +607,25 @@ model:
           align_corners: false
           mode: bilinear
       vtransform:
-        dbound:
-        - 1.0
-        - 55.0
-        - 1.0
-        feature_size:
-        - 32
-        - 88
-        image_size:
+        in_channels: 256
+        input_size:
         - 256
         - 704
-        in_channels: 256
         out_channels: 128
-        type: LSSTransform
-        xbound:
+        top_type: lidar
+        type: BEVTransform
+        x:
         - -54.0
         - 54.0
-        - 0.6
-        ybound:
+        xs: 180
+        y:
         - -54.0
         - 54.0
-        - 0.6
-        zbound:
+        ys: 180
+        z:
         - -5.0
         - 3.0
-        - 1.0
+        zs: 10
     lidar:
       backbone:
         block_type: basicblock
@@ -690,7 +684,7 @@ model:
         - 0.2
   fuser:
     in_channels:
-    - 1024
+    - 1280
     - 256
     out_channels: 512
     type: ConvFuser
@@ -853,27 +847,29 @@ model:
         - 200
         - 1
         point_range:
-        - -40.0
-        - 40.0
-        - -40.0
-        - 40.0
+        - -50.0
+        - 50.0
+        - -50.0
+        - 50.0
         - 0.0
         - 0.0
+        point_type: lidar
         type: CrossCoordinateSample
       in_dim: 128
       loss_occ:
         drop_free: true
+        free_label: 0
         ignore_index: 255
         loss_weight: 1.0
         type: CrossEntropyLoss
         use_sigmoid: false
-      num_classes: 18
+      num_classes: 17
       out_dim: 128
       type: BEVOCCHead2D
       use_mask: false
       use_predicter: true
   loss_scale:
-    object: 0.0
+    object: 0.01
     occ: 1.0
   type: BEVFusion
 object_classes:
@@ -887,13 +883,12 @@ object_classes:
 - bicycle
 - pedestrian
 - traffic_cone
-occ_data_type: occ3d
+occ_data_type: surround_occ
 optimizer:
   lr: 0.0002
   type: AdamW
   weight_decay: 0.01
 optimizer_config:
-  cumulative_iters: 4
   grad_clip:
     max_norm: 35
     norm_type: 2
@@ -907,7 +902,7 @@ point_cloud_range:
 point_lidar_to_ego: false
 reduce_beams: 32
 resume_from: null
-run_dir: runsdaocc_occ3d_wo_mask_lss
+run_dir: runsdaocc_surroundocc
 runner:
   max_epochs: 6
   type: CustomEpochBasedRunner
@@ -942,8 +937,8 @@ test_pipeline:
   is_train: false
   rand_flip: false
   resize_lim:
-  - -0.06
-  - 0.11
+  - 0.0
+  - 0.0
   rot_lim:
   - 0.0
   - 0.0
@@ -957,7 +952,7 @@ test_pipeline:
   - 0.0
   trans_lim: 0.0
   type: GlobalRotScaleTrans
-- data_type: occ3d
+- data_type: surround_occ
   type: LoadOccGTFromFile
 - point_cloud_range:
   - -54.0
@@ -1038,11 +1033,11 @@ train_pipeline:
   is_train: true
   rand_flip: true
   resize_lim:
-  - -0.06
-  - 0.11
+  - 0.0
+  - 0.0
   rot_lim:
-  - -5.4
-  - 5.4
+  - -0.0
+  - 0.0
   type: ImageAug3D
 - is_train: true
   resize_lim:
@@ -1053,7 +1048,7 @@ train_pipeline:
   - 0.0
   trans_lim: 0.0
   type: GlobalRotScaleTrans
-- data_type: occ3d
+- data_type: surround_occ
   type: LoadOccGTFromFile
 - type: RandomFlip3D
 - point_cloud_range:

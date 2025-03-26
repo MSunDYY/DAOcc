@@ -2,7 +2,7 @@ voxel_size: [0.075, 0.075, 0.2]
 point_cloud_range: [-54.0, -54.0, -5.0, 54.0, 54.0, 3.0]
 
 data:
-  samples_per_gpu: 1
+  samples_per_gpu: 4
   workers_per_gpu: 8
   train:
     type: CBGSDataset
@@ -98,20 +98,20 @@ model:
           mode: bilinear
           align_corners: false
       vtransform:
-        type: LSSTransform
+        type: DepthLSSTransform
         in_channels: 256
         out_channels: 128
         image_size : [256,704]
         feature_size: [32,88]
         xbound: [ -54., 54., 0.6 ]
         ybound: [ -54., 54., 0.6 ]
-        zbound: [ -5., 3., 8.0 ]
+        zbound: [ -5., 3., 1.0 ]
         dbound: [ 1.0, 55.0, 1.0 ]
 
 
   fuser:
     type: ConvFuser
-    in_channels: [128,256]
+    in_channels: [1024,256]
     out_channels: 512
   decoder:
     backbone:
@@ -231,17 +231,16 @@ optimizer:
   lr: 2.0e-4
   weight_decay: 0.01
 
-
 optimizer_config:
   grad_clip:
     max_norm: 35
     norm_type: 2
-  cumulative_iters: 4
+  cumulative_iters: 2
 
 lr_config:
   policy: CosineAnnealing
   warmup: linear
-  warmup_iters: 2000
+  warmup_iters: 1000
   warmup_ratio: 0.33333333
   min_lr_ratio: 1.0e-3
 

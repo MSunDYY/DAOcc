@@ -143,7 +143,7 @@ class NuScenesDatasetOccupancy(NuScenesDataset):
 
                     eval_results = calc_ray_iou(occ_preds, occ_gts, lidar_origins)
                 else:
-                    raise NotImplementedError
+                    continue
             else:  # mIoU
                 if self.data_type == 'occ3d':
                     self.occ_eval_metrics = Metric_mIoU(
@@ -158,6 +158,11 @@ class NuScenesDatasetOccupancy(NuScenesDataset):
                         gt_semantics = occ_gt['semantics']      # (Dx, Dy, Dz)
                         mask_lidar = occ_gt['mask_lidar'].astype(bool)      # (Dx, Dy, Dz)
                         mask_camera = occ_gt['mask_camera'].astype(bool)    # (Dx, Dy, Dz)
+
+                        if True:
+                            mask = (occ_pred!=17) * (gt_semantics!=17)
+                            occ_pred[mask] = gt_semantics[mask]
+
                         self.occ_eval_metrics.add_batch(
                             occ_pred,   # (Dx, Dy, Dz)
                             gt_semantics,   # (Dx, Dy, Dz)

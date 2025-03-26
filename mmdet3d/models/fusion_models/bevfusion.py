@@ -335,8 +335,10 @@ class BEVFusion(Base3DFusionModel):
                         )
                 elif head_type == "occ":
                     # TODO: [yz] this is so weird!
+
                     occ_pred = head(x, lidar_aug_matrix, lidar2ego, kwargs['occ_aug_matrix'])
                     occ_pred = head.get_occ(occ_pred)
+
                     for k in range(batch_size):
                         outputs[k].update(
                             {

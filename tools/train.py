@@ -24,6 +24,7 @@ def main():
     parser.add_argument("--config",default='configs/nuscenes/occ3d/daocc_occ3d_wo_mask_lss.yaml', metavar="FILE", help="config file")
     parser.add_argument("--run-dir", metavar="DIR", help="run directory")
     parser.add_argument("--dist", action='store_true', help="distributed or not")
+    parser.add_argument('--extra_tag',default='default',)
     args, opts = parser.parse_known_args()
 
     if args.dist:
@@ -41,7 +42,7 @@ def main():
         torch.cuda.set_device(0)
 
     if args.run_dir is None:
-        args.run_dir = 'runs' + args.config.split('/')[-1].replace('.yaml','')
+        args.run_dir = 'runs/' + args.config.split('/')[-1].replace('.yaml','/') + args.extra_tag
     else:
         set_run_dir(args.run_dir)
     cfg.run_dir = args.run_dir
@@ -51,7 +52,7 @@ def main():
 
     # init the logger before other steps
     timestamp = time.strftime("%Y%m%d_%H%M%S", time.localtime())
-    log_file = os.path.join(cfg.run_dir, f"{timestamp}.log")
+    log_file = os.path.join(cfg.run_dir, f"{args.extra_tag}.log")
     logger = get_root_logger(log_file=log_file)
 
     # log some basic info
