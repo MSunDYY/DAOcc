@@ -217,4 +217,4 @@ lr_config:
 max_epochs: 6
 
 evaluation:
-  interval: 2
+  interval: 1

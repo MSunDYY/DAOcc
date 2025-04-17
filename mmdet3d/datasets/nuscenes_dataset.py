@@ -1,7 +1,7 @@
 import tempfile
 from os import path as osp
 from typing import Any, Dict
-
+import torch.nn as nn
 import mmcv
 import numpy as np
 import pyquaternion
@@ -141,7 +141,7 @@ class NuScenesDataset(Custom3DDataset):
         dataset_root=None,
         object_classes=None,
         map_classes=None,
-        load_interval=1,
+        load_interval=1000,
         with_velocity=True,
         modality=None,
         box_type_3d="LiDAR",
